@@ -4,6 +4,7 @@ import { Link } from 'react-router-dom';
 import { PostAuthor } from './PostAuthor';
 import { TimeAgo } from './TimeAgo';
 import { ReactionButtons } from './ReactionButtons';
+import { selectAllPosts } from './postsSlice';
 
 const PostExcerpt = ({ post }) => {
     return (
@@ -23,7 +24,7 @@ const PostExcerpt = ({ post }) => {
 }
 
 export const PostsList = () => {
-    const posts = useSelector((state) => state.posts);
+    const posts = useSelector(selectAllPosts);
 
     const orderedPosts = posts.slice().sort((a, b) => b.date.localeCompare(a.date));
 
