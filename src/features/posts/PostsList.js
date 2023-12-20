@@ -5,13 +5,8 @@ import { PostAuthor } from './PostAuthor';
 import { TimeAgo } from './TimeAgo';
 import { ReactionButtons } from './ReactionButtons';
 
-export const PostsList = () => {
-    const posts = useSelector((state) => state.posts);
-
-    const orderedPosts = posts.slice().sort((a,b) => b.date.localeCompare(a.date));
-
-
-    const renderedPosts = orderedPosts.map((post) => (
+const PostExcerpt = ({ post }) => {
+    return (
         <article className='post-excerpt' key={post.id}>
             <h3>{post.title}</h3>
             <div>
@@ -19,11 +14,22 @@ export const PostsList = () => {
                 <TimeAgo timestamp={post.date} />
             </div>
             <p className='post-content'>{post.content.substring(0, 100)}</p>
-            <ReactionButtons post={post}  />
+            <ReactionButtons post={post} />
             <Link to={`/posts/${post.id}`} className="button muter-button">
                 View Post
             </Link>
         </article>
+    )
+}
+
+export const PostsList = () => {
+    const posts = useSelector((state) => state.posts);
+
+    const orderedPosts = posts.slice().sort((a, b) => b.date.localeCompare(a.date));
+
+
+    const renderedPosts = orderedPosts.map((post) => (
+        <PostExcerpt key={post.id} post={post} />
     ))
 
     return (
