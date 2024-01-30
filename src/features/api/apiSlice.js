@@ -1,4 +1,5 @@
 import { createApi, fetchBaseQuery} from '@reduxjs/toolkit/query/react';
+import arEG from 'date-fns/locale/ar-EG';
 
 export const apiSlice = createApi({
     reducerPath: "api",
@@ -7,11 +8,14 @@ export const apiSlice = createApi({
     endpoints: (builder) => ({
         getPosts: builder.query({
             query: () => "/posts",
-            providesTags: ["Post"]
-
+            providesTags: (result = [], error, arg) => [
+                "Post",
+                ...result.map(({id}) => ({type: "Post", id}))
+            ]
         }),
         getPost: builder.query({
-            query: postId => `/posts/${postId}`
+            query: postId => `/posts/${postId}`,
+            providesTags: (result, error, arg) => [{type: 'Post', id: arg}]
         }),
         addNewPost: builder.mutation({
             query: (initialPost) => ({
@@ -26,7 +30,8 @@ export const apiSlice = createApi({
                 url: `posts/${post.id}`,
                 method: 'PATCH',
                 body: post,
-            })
+            }),
+            invalidatesTags:(result, error, arg) => [{type: "Post", id:arg.id}]
         })
     })
 })
