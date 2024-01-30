@@ -1,5 +1,6 @@
 import React, { useMemo } from 'react';
 import { Link } from 'react-router-dom';
+import classnames from 'classnames';
 import { Spinner } from "../../components/Spinner";
 import { PostAuthor } from './PostAuthor';
 import { TimeAgo } from './TimeAgo';
@@ -27,6 +28,7 @@ export const PostsList = () => {
     const {
         data:posts = [],
         isLoading,
+        isFetching,
         isSuccess,
         isError,
         error,
@@ -44,7 +46,12 @@ export const PostsList = () => {
     if(isLoading) {
         content = <Spinner text="Loading..."/>
     }else if(isSuccess) {
-        content = sortedPosts.map(post => <PostExcerpt key={post.id} post={post} />)
+
+        const renderedPosts = sortedPosts.map(post => <PostExcerpt key={post.id} post={post} />)
+        const containerClassname = classnames("posts-container", {
+            disabled: isFetching
+        })
+        content = <div className={containerClassname}>{renderedPosts}</div>
     } else if(isError) {
         content= <div>{error.toString()}</div>
     }
