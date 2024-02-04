@@ -1,6 +1,7 @@
-import { createSlice, createAsyncThunk, createEntityAdapter } from "@reduxjs/toolkit";
-import { client } from "../../api/client";
+import { createEntityAdapter, createSelector } from "@reduxjs/toolkit";
+import { apiSlice } from "../api/apiSlice";
 
+/*
 const usersAdapter = createEntityAdapter();
 
 const initialState = usersAdapter.getInitialState();
@@ -27,3 +28,18 @@ export const {
     selectById: selectUserById
 } = usersAdapter.getSelectors((state) => state.users)
 
+*/
+export const selectUsersResult = apiSlice.endpoints.getUsers.select();
+
+const emptyUsers = [];
+
+export const selectAllUsers = createSelector(
+    selectUsersResult,
+    (usersResult) => usersResult?.data ?? emptyUsers
+)
+
+export const selectUserById = createSelector(
+    selectAllUsers,
+    (state, userId) => userId,
+    (users, userId) => users.find((user) => user.id === userId)
+)
