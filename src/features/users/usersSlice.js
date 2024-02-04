@@ -29,7 +29,19 @@ export const {
 } = usersAdapter.getSelectors((state) => state.users)
 
 */
-export const selectUsersResult = apiSlice.endpoints.getUsers.select();
+
+export const extendedApiSlice =
+apiSlice.injectEndpoints({
+    endpoints: (builder) => ({
+        getUsers: builder.query({
+            query: () => "/users"
+        })
+    })
+})
+
+export const { useGetUsersQuery} = extendedApiSlice;
+
+export const selectUsersResult = extendedApiSlice.endpoints.getUsers.select();
 
 const emptyUsers = [];
 
